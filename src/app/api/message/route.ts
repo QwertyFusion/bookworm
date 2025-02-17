@@ -70,9 +70,7 @@ export const POST = async (req: NextRequest) => {
 
   const prevMessages = await db.message.findMany({
     where: {
-        File: {
-            some: { id: fileId }, // Check if the file ID exists in the File relation
-          }
+      fileId,
     },
     orderBy: {
       createdAt: 'asc',
@@ -127,7 +125,7 @@ export const POST = async (req: NextRequest) => {
           text: completion,
           isUserMessage: false,
           fileId,
-          userId,
+          userId
         },
       })
     },
