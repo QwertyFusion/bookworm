@@ -29,6 +29,7 @@ export const POST = async (req: NextRequest) => {
 
     if (!file) return new Response("Not found", { status: 404 });
 
+    // Save the user's message to the database
     await db.message.create({
       data: {
         text: message,
@@ -38,10 +39,23 @@ export const POST = async (req: NextRequest) => {
       },
     });
 
+    // Retrieve the PDF content stored from the previous processing (if available)
+    const previousPdfMessage = await db.message.findFirst({
+      where: {
+        fileId,
+        isUserMessage: false, // Get the non-user message which stores PDF content
+      },
+    });
+
+    if (!previousPdfMessage) {
+      return new Response("No PDF content found", { status: 404 });
+    }
+
+    // Fetch previous messages to maintain conversation context
     const prevMessages = await db.message.findMany({
       where: { fileId },
       orderBy: { createdAt: "asc" },
-      take: 6,
+      take: 6, // Limit to 6 previous messages
     });
 
     const formattedPrevMessages = prevMessages.map((msg) => ({
@@ -49,8 +63,13 @@ export const POST = async (req: NextRequest) => {
       content: msg.text,
     }));
 
-    const chatInput = `Use the following pieces of context (or previous conversation if needed) to answer the user's question in markdown format.
-If you don't know the answer, just say that you don't know, don't try to make up an answer.
+    const chatInput = `Use the following context (or previous conversation if needed) to answer the user's question in markdown format. 
+If you don't know the answer, just say that you don't know, don't try to make up an answer. Remember that the context that has been given to you is from a PDF that got parsed.
+
+----------------
+
+PREVIOUS PDF CONTENT:
+${previousPdfMessage.text}
 
 ----------------
 
@@ -71,21 +90,24 @@ USER INPUT: ${message}`;
 
     console.log("Gemini API call successful!");
 
-
+    let completionText = "";
     const stream = new ReadableStream({
       async start(controller) {
         for await (const chunk of response.stream) {
+          completionText += chunk.text();
           controller.enqueue(chunk.text());
         }
         controller.close();
       },
     });
 
-    let completionText = "";
     for await (const chunk of response.stream) {
       completionText += chunk.text();
     }
 
+    console.log(completionText);
+
+    // Save the response from Gemini to the database as an assistant message
     await db.message.create({
       data: {
         text: completionText,
@@ -121,7 +143,6 @@ USER INPUT: ${message}`;
         console.error("Gemini API Response Headers:", errorWithResponse.response.headers);
       }
     }
-
 
     return new Response("Error communicating with Gemini API", { status: 500 });
   }

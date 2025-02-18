@@ -2,24 +2,25 @@ import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import { OpenAIEmbeddings } from "@langchain/openai";
-import {PineconeStore} from "@langchain/pinecone"
-import { pinecone } from "@/lib/pinecone";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const f = createUploadthing();
+
+// Initialize Gemini AI *outside* the handler for efficiency
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
 const auth = (req: Request) => ({ id: "fakeId" });
 
 export const ourFileRouter = {
   pdfUploader: f({ pdf: { maxFileSize: "8MB" } })
     .middleware(async ({ req }) => {
+        const { getUser } = getKindeServerSession();
+        const user = await getUser();
 
-        const { getUser } = getKindeServerSession()
-        const user = await getUser()
+        if (!user || !user.id) throw new Error("Unauthorized");
 
-        if(!user || !user.id) throw new Error("Unauthorized")
-            
-        return {userId: user.id};
+        return { userId: user.id };
     })
     .onUploadComplete(async ({ metadata, file }) => {
       const createdFile = await db.file.create({
@@ -30,44 +31,52 @@ export const ourFileRouter = {
           url: file.url, // use file.url or use `https://utfs.io/f/${file.key}`
           uploadStatus: "PROCESSING"
         }
-      })
+      });
 
       try {
-        const response = await fetch(file.url)
-        const blob = await response.blob()
+        // Fetch the PDF file content
+        const response = await fetch(file.url);
+        const blob = await response.blob();
 
-        const loader = new PDFLoader(blob)
-        const pageLevelDocs = await loader.load()
-        const pagesAmt = pageLevelDocs.length
+        // Load the PDF using PDFLoader
+        const loader = new PDFLoader(blob);
+        const pageLevelDocs = await loader.load();
+        const pdfTextContent = pageLevelDocs.map(doc => doc.pageContent).join("\n"); // Concatenate all pages' content
 
-        const pineconeIndex = pinecone.Index("bookworm")  
-        const embeddings = new OpenAIEmbeddings({
-          openAIApiKey: process.env.OPENAI_API_KEY
-        })
+        // Store the extracted text content in the database as a message
+        await db.message.create({
+          data: {
+            text: pdfTextContent, // Store the extracted content
+            isUserMessage: false,
+            fileId: createdFile.id,
+            userId: metadata.userId,
+          },
+        });
 
-        await PineconeStore.fromDocuments(
-          pageLevelDocs, embeddings, {
-            pineconeIndex,
-            namespace: createdFile.id
-          })
-
+        // Update the file status after successful processing
         await db.file.update({
           data: {
             uploadStatus: "SUCCESS"
-          }, 
-          where :{
+          },
+          where: {
             id: createdFile.id
           }
-        })
+        });
+
       } catch (err) {
+        console.error("Error processing PDF:", err);
+
+        // If something fails, update the file status to "FAILED"
         await db.file.update({
           data: {
             uploadStatus: "FAILED"
-          }, 
-          where :{
+          },
+          where: {
             id: createdFile.id
           }
-        })
+        });
+
+        throw new Error("Error processing PDF");
       }
     }),
 } satisfies FileRouter;
