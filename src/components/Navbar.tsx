@@ -1,5 +1,3 @@
-"use client"
-
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
