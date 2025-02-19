@@ -4,10 +4,6 @@ import { db } from '@/db'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { notFound, redirect } from 'next/navigation'
 
-interface PageProps {
-  params: { fileid: string }
-}
-
 const Page = async ({ params }: { params: { fileid: string } }) => {
   const { fileid } = params
 
