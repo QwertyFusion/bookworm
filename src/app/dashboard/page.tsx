@@ -24,10 +24,10 @@ const Page = async () => {
         }
     })
     
-    if(!dbUser) {
-        redirect('/auth-callback?origin=dashboard');
-        return; 
-    }
+    // if(!dbUser) {
+    //     redirect('/auth-callback?origin=dashboard');
+    //     return; 
+    // }
 
     const subscriptionPlan = await getUserSubscriptionPlan()
 
