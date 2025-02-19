@@ -1,7 +1,7 @@
 "use client"
 
 import { useToast } from "@/hooks/use-toast";
-import { ChevronDown, ChevronUp, Divide, Loader2, RotateCw, Search } from "lucide-react";
+import { ChevronDown, ChevronUp, Loader2, RotateCw, Search } from "lucide-react";
 import {Document, Page, pdfjs} from "react-pdf"
 import { useResizeDetector } from "react-resize-detector"
 

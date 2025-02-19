@@ -82,9 +82,9 @@ export const ChatContextProvider = ({
             }
           }
 
-          let newPages = [...old.pages]
+          const newPages = [...old.pages]
 
-          let latestPage = newPages[0]!
+          const latestPage = newPages[0]!
 
           latestPage.messages = [
             {
@@ -147,14 +147,14 @@ export const ChatContextProvider = ({
           (old) => {
             if (!old) return { pages: [], pageParams: [] }
 
-            let isAiResponseCreated = old.pages.some(
+            const isAiResponseCreated = old.pages.some(
               (page) =>
                 page.messages.some(
                   (message) => message.id === 'ai-response'
                 )
             )
 
-            let updatedPages = old.pages.map((page) => {
+            const updatedPages = old.pages.map((page) => {
               if (page === old.pages[0]) {
                 let updatedMessages
 

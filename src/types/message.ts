@@ -1,6 +1,5 @@
 import { AppRouter } from "@/trpc";
 import { inferRouterOutputs } from "@trpc/server";
-import { Message } from "ai";
 
 type RouterOutput = inferRouterOutputs<AppRouter>
 
