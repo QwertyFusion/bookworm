@@ -30,6 +30,12 @@
 
 ---
 
+## ✨ Demo Website
+
+You can visit the demo website at [https://bookworm-qwertyfusion.vercel.app](https://bookworm-qwertyfusion.vercel.app). However, due to vercel dependencies and minor problems, the dashboard page is not rendering correctly and resulting into infinite auth-callbacks.
+
+---
+
 ## ✨ Preview  
 
 <div style="display: flex; justify-content: space-between;">
