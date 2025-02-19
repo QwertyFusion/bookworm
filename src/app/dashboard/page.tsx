@@ -1,6 +1,7 @@
+"use client"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from 'next/navigation'
-// import { db } from '@/db'
+import { db } from '@/db'
 import Dashboard from "@/components/Dashboard";
 import { getUserSubscriptionPlan } from "@/lib/stripe";
 
@@ -18,16 +19,16 @@ const Page = async () => {
         return;
     }
 
-    // const dbUser = await db.user.findFirst({
-    //     where: {
-    //         id: user.id
-    //     }
-    // })
+    const dbUser = await db.user.findFirst({
+        where: {
+            id: user.id
+        }
+    })
     
-    // if(!dbUser) {
-    //     redirect('/auth-callback?origin=dashboard');
-    //     return; 
-    // }
+    if(!dbUser) {
+        redirect('/auth-callback?origin=dashboard');
+        return; 
+    }
 
     const subscriptionPlan = await getUserSubscriptionPlan()
 
