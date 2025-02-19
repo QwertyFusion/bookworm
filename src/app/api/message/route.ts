@@ -8,6 +8,15 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
+interface APIErrorResponse {
+  response?: {
+    data?: unknown;
+    status?: number;
+    headers?: unknown;
+  };
+}
+
+
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
@@ -121,7 +130,7 @@ USER INPUT: ${message}`;
       headers: { "Content-Type": "text/event-stream" },
     });
 
-  } catch (error: any) { // Type the error as 'any' or 'Error' if you know more
+  } catch (error: unknown) { // Type the error as 'any' or 'Error' if you know more
     console.error("Gemini API Error:", error);
 
     if (error instanceof Error) { // Type guard to check if it's an Error object
@@ -130,7 +139,7 @@ USER INPUT: ${message}`;
     }
 
     if (typeof error === 'object' && error !== null && 'response' in error) { // Check if 'response' exists
-      const errorWithResponse = error as { response: any }; // Type assertion
+      const errorWithResponse = error as APIErrorResponse; // Type assertion
       console.error("Gemini API Response:", errorWithResponse.response);
 
       if (typeof errorWithResponse.response === 'object' && errorWithResponse.response !== null && 'data' in errorWithResponse.response) {

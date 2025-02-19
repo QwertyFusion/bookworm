@@ -2,19 +2,12 @@ import { db } from "@/db";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { createUploadthing, type FileRouter } from "uploadthing/next";
 import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const f = createUploadthing();
 
-// Initialize Gemini AI *outside* the handler for efficiency
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
-
-const auth = (req: Request) => ({ id: "fakeId" });
-
 export const ourFileRouter = {
   pdfUploader: f({ pdf: { maxFileSize: "8MB" } })
-    .middleware(async ({ req }) => {
+    .middleware(async () => {
         const { getUser } = getKindeServerSession();
         const user = await getUser();
 
