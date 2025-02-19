@@ -5,33 +5,22 @@ import Dashboard from "@/components/Dashboard";
 import { getUserSubscriptionPlan } from "@/lib/stripe";
 
 const Page = async () => {
-    console.log("1")
-    const { getUser } = await getKindeServerSession(); // Await the session
-    const user = await getUser(); // Await the user
-
-    console.log("2")
-    // Check if the user exists and has an ID
-    if (!user || !user.id) {
-        // Use NextResponse.redirect for redirection
-        console.log("3")
-        redirect('/auth-callback?origin=dashboard'); 
-        return;
-    }
-
+    const { getUser } = getKindeServerSession()
+    const user = getUser()
+  
+    if (!user || !user.id) redirect('/auth-callback?origin=dashboard')
+  
     const dbUser = await db.user.findFirst({
-        where: {
-            id: user.id
-        }
+      where: {
+        id: user.id
+      }
     })
-    
-    if(!dbUser) {
-        redirect('/auth-callback?origin=dashboard');
-        return; 
-    }
-
+  
+    if(!dbUser) redirect('/auth-callback?origin=dashboard')
+  
     const subscriptionPlan = await getUserSubscriptionPlan()
-
+  
     return <Dashboard subscriptionPlan={subscriptionPlan} />
-}
-    
-export default Page
+  }
+  
+  export default Page
