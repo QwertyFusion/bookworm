@@ -38,6 +38,9 @@ importers:
       '@langchain/pinecone':
         specifier: ^0.1.3
         version: 0.1.3(@langchain/core@0.3.22(openai@4.76.0(encoding@0.1.13)(zod@3.23.8)))
+      '@mantine/hooks':
+        specifier: ^7.17.0
+        version: 7.17.0(react@19.0.0-rc-02c0e824-20241028)
       '@pinecone-database/pinecone':
         specifier: ^4.0.0
         version: 4.0.0
@@ -1346,6 +1349,11 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       '@langchain/core': '>=0.2.21 <0.4.0'
+
+  '@mantine/hooks@7.17.0':
+    resolution: {integrity: sha512-vo3K49mLy1nJ8LQNb5KDbJgnX0xwt3Y8JOF3ythjB5LEFMptdLSSgulu64zj+QHtzvffFCsMb05DbTLLpVP/JQ==}
+    peerDependencies:
+      react: ^18.x || ^19.x
 
   '@mapbox/node-pre-gyp@1.0.11':
     resolution: {integrity: sha512-Yhlar6v9WQgUp/He7BdgzOz8lqMQ8sU+jkCq7Wx8Myc5YFJLbEe7lgui/V7G1qB1DJykHSGwreceSaD60Y0PUQ==}
@@ -5976,6 +5984,10 @@ snapshots:
     dependencies:
       '@langchain/core': 0.3.22(openai@4.76.0(encoding@0.1.13)(zod@3.23.8))
       js-tiktoken: 1.0.15
+
+  '@mantine/hooks@7.17.0(react@19.0.0-rc-02c0e824-20241028)':
+    dependencies:
+      react: 19.0.0-rc-02c0e824-20241028
 
   '@mapbox/node-pre-gyp@1.0.11(encoding@0.1.13)':
     dependencies:
