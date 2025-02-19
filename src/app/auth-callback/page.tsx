@@ -1,5 +1,7 @@
 "use client"
 
+export const dynamic = "force-dynamic";
+
 import { useRouter, useSearchParams } from 'next/navigation';
 import { trpc } from '../_trpc/client';
 import { Loader2 } from 'lucide-react';
