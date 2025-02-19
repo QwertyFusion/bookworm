@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { trpc } from "../_trpc/client";
 import { Loader2 } from "lucide-react";
 
+export const dynamic = "force-dynamic"; // ✅ Prevents pre-render errors
+
 const AuthCallbackHandler = () => {
   console.log("auth callback");
 
