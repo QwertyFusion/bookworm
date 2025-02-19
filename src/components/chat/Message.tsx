@@ -22,7 +22,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
           className={cn(
             'relative flex h-6 w-6 aspect-square items-center justify-center',
             {
-              'order-2 bg-blue-600 rounded-sm':
+              'order-2 bg-primary rounded-sm':
                 message.isUserMessage,
               'order-1 bg-zinc-800 rounded-sm':
                 !message.isUserMessage,
@@ -30,9 +30,9 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
             }
           )}>
           {message.isUserMessage ? (
-            <Icons.user className='fill-zinc-200 text-zinc-200 h-3/4 w-3/4' />
+            <Icons.user className='fill-zinc-800 text-zinc-800 h-3/4 w-3/4' />
           ) : (
-            <Icons.logo className='fill-zinc-300 h-3/4 w-3/4' />
+            <Icons.logo className='fill-primary h-3/4 w-3/4' />
           )}
         </div>
 
@@ -48,7 +48,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
             className={cn(
               'px-4 py-2 rounded-lg inline-block',
               {
-                'bg-blue-600 text-white':
+                'bg-primary text-zinc-800':
                   message.isUserMessage,
                 'bg-gray-200 text-gray-900':
                   !message.isUserMessage,
@@ -63,7 +63,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
             {typeof message.text === 'string' ? (
               <ReactMarkdown
                 className={cn('prose', {
-                  'text-zinc-50': message.isUserMessage,
+                  'text-zinc-800': message.isUserMessage,
                 })}>
                 {message.text}
               </ReactMarkdown>
@@ -76,7 +76,7 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
                   'text-xs select-none mt-2 w-full text-right',
                   {
                     'text-zinc-500': !message.isUserMessage,
-                    'text-blue-300': message.isUserMessage,
+                    'text-zinc-700': message.isUserMessage,
                   }
                 )}>
                 {format(

@@ -1,13 +1,13 @@
 "use client"
 
 import { useToast } from "@/hooks/use-toast";
-import { ChevronDown, ChevronUp, Loader2, RotateCw, Search } from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronUp, Loader2, RotateCw, Search } from "lucide-react";
 import {Document, Page, pdfjs} from "react-pdf"
 import { useResizeDetector } from "react-resize-detector"
 
 import 'react-pdf/dist/Page/AnnotationLayer.css';
 import 'react-pdf/dist/Page/TextLayer.css';
-import { Button } from "./ui/button";
+import { Button, buttonVariants } from "./ui/button";
 import { Input } from "./ui/input";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,6 +23,7 @@ import {
 
 import SimpleBar from "simplebar-react"
 import PdfFullscreen from "./PdfFullscreen";
+import Link from "next/link";
 
 pdfjs.GlobalWorkerOptions.workerSrc="https://unpkg.com/pdfjs-dist@4.4.168/legacy/build/pdf.worker.min.mjs"
 
@@ -71,6 +72,15 @@ const PdfRenderer = ({url}: PdfRendererProps) => {
     <div className='w-full bg-white rounded-md shadow flex flex-col items-center'>
         <div className='h-14 w-full border-b border-zinc-200 flex items-center justify-between px-2'>
             <div className='flex items-center gap-1.5'>
+            <Link
+              href='/dashboard'
+              className={buttonVariants({
+                variant: 'destructive',
+                className: '',
+              })}>
+              <ChevronLeft className='h-4 w-4' />
+              Back
+            </Link>
                 <Button 
                 disabled={numPages === undefined || currPage === numPages}
                 onClick={() => {
@@ -78,7 +88,8 @@ const PdfRenderer = ({url}: PdfRendererProps) => {
                   setValue("page", String(currPage + 1))
                 }}
                 variant='ghost' aria-label="next page">
-                  <ChevronUp className="h-4 w-4"/>
+                  <ChevronDown className="h-4 w-4"/>
+                  Next
                 </Button>
 
                 <Button 
@@ -88,10 +99,13 @@ const PdfRenderer = ({url}: PdfRendererProps) => {
                   setValue("page", String(currPage - 1))
                 }}
                 variant='ghost' aria-label="previous page">
-                  <ChevronDown className="h-4 w-4"/>
+                  <ChevronUp className="h-4 w-4"/>
+                  Prev
                 </Button>
 
-                <div className="flex items-center gap-1.5">
+                
+              </div>
+              <div className="flex items-center gap-1.5">
                   <Input 
                     {...register("page")} 
                     className={cn('w-12 h-8', errors.page && "focus-visible:ring-red-500")}
@@ -106,7 +120,6 @@ const PdfRenderer = ({url}: PdfRendererProps) => {
                     <span>{numPages ?? 'x'}</span>
                   </p>
                 </div>
-              </div>
 
                 <div className="space-x-2">
                 <DropdownMenu>
