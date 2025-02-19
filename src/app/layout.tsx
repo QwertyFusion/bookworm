@@ -1,6 +1,5 @@
-import type { Metadata } from "next";
 import "./globals.css";
-import { cn } from "@/lib/utils";
+import { cn, constructMetadata } from "@/lib/utils";
 import { Inter } from 'next/font/google'
 import Navbar from "@/components/Navbar";
 import Providers from "@/components/Providers";
@@ -10,10 +9,7 @@ import "simplebar-react/dist/simplebar.min.css"
 
 const inter = Inter({subsets: ['latin'] })
 
-export const metadata: Metadata = {
-  title: "Bookworm",
-  description: "Chat with your documents in seconds!",
-};
+export const metadata = constructMetadata()
 
 export default function RootLayout({
   children,

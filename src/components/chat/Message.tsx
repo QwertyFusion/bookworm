@@ -24,15 +24,15 @@ const Message = forwardRef<HTMLDivElement, MessageProps>(
             {
               'order-2 bg-primary rounded-sm':
                 message.isUserMessage,
-              'order-1 bg-zinc-800 rounded-sm':
+              'order-1 bg-primary rounded-sm':
                 !message.isUserMessage,
               invisible: isNextMessageSamePerson,
             }
           )}>
           {message.isUserMessage ? (
-            <Icons.user className='fill-zinc-800 text-zinc-800 h-3/4 w-3/4' />
+            <Icons.user className='text-zinc-800 h-3/4 w-3/4' />
           ) : (
-            <Icons.logo className='fill-primary h-3/4 w-3/4' />
+            <Icons.logo className='h-3/4 w-3/4' />
           )}
         </div>
 
