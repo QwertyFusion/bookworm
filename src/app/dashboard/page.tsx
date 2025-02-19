@@ -6,7 +6,7 @@ import { getUserSubscriptionPlan } from "@/lib/stripe";
 
 const Page = async () => {
     console.log("1")
-    const { getUser } = getKindeServerSession(); // Await the session
+    const { getUser } = await getKindeServerSession(); // Await the session
     const user = await getUser(); // Await the user
 
     console.log("2")

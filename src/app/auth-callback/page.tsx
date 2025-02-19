@@ -20,27 +20,17 @@ const AuthCallbackHandler = () => {
     retryDelay: 500, // checking every 0.5s
   });
 
-  if (error) {
-    const errData = error.data;
-    if (errData?.code === 'UNAUTHORIZED') {
-      router.push('/sign-in');
-    } else {
-      // Handle other types of errors
-      console.error("An error occurred:", error);
-    }
-  }
-
   // Handle success and error states
-  if (data?.success) {
+  if (data && data.success) {
     // User is synced to db
     router.push(origin ? `/${origin}` : "/dashboard");
   }
 
-  // if (error) {
-  //   if (error.data?.code === "UNAUTHORIZED") {
-  //     router.push("/sign-in");
-  //   }
-  // }
+  if (error) {
+    if (error.data?.code === "UNAUTHORIZED") {
+      router.push("/sign-in");
+    }
+  }
 
   return (
     <div className="w-full mt-24 flex justify-center">
